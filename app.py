@@ -18,16 +18,19 @@ st.set_page_config(page_title="Obesity Risk Checker", layout="wide")
 # -------------------------------------------------------
 
 @st.cache_data
+@st.cache_data
 def load_data():
-   df = pd.read_csv("brfss_obesity_clean.csv")
+    df = pd.read_csv("brfss_obesity_clean.csv")
 
+    # This dataset is already filtered for obesity, but we add this as a safety check
+    df["Data_Value"] = pd.to_numeric(df["Data_Value"], errors="coerce")
+    df = df.dropna(subset=["Data_Value"])
 
-    obesity_df = df[df["Question"].str.contains("obesity", case=False, na=False)].copy()
-    obesity_df["Data_Value"] = pd.to_numeric(obesity_df["Data_Value"], errors="coerce")
-    obesity_df = obesity_df.dropna(subset=["Data_Value"])
-    obesity_df["high_obesity"] = (obesity_df["Data_Value"] >= 35).astype(int)
+    # Create binary target
+    df["high_obesity"] = (df["Data_Value"] >= 35).astype(int)
 
-    return obesity_df
+    return df
+
 
 
 @st.cache_resource
