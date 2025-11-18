@@ -19,9 +19,8 @@ st.set_page_config(page_title="Obesity Risk Checker", layout="wide")
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv(
-        "Nutrition,_Physical_Activity,_and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System_20251118.csv"
-    )
+   df = pd.read_csv("brfss_obesity_clean.csv")
+
 
     obesity_df = df[df["Question"].str.contains("obesity", case=False, na=False)].copy()
     obesity_df["Data_Value"] = pd.to_numeric(obesity_df["Data_Value"], errors="coerce")
